@@ -34,7 +34,7 @@ jobs:
         run: docker build -t mycorp/escape-app:${{ github.sha }} .
 
       - name: Image scan with Trivy
-        uses: aquasecurity/trivy-action@0.28.0
+        uses: aquasecurity/trivy-action@master
         with:
           image-ref: mycorp/escape-app:${{ github.sha }}
           format: table
