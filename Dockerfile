@@ -1,20 +1,14 @@
-# EXPERT Dockerfile (intentionally imperfect)
 FROM python:3.11-slim
 
 WORKDIR /app
 
-RUN apt-get update \
- && apt-get install -y --no-install-recommends ca-certificates \
- && update-ca-certificates \
- && rm -rf /var/lib/apt/lists/*
+COPY web/requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Still copies too much (students should add .dockerignore)
-COPY . /app
+COPY web ./web
+COPY vault ./vault
 
-RUN pip install --no-cache-dir -r web/requirements.txt && \
-    pip install --no-cache-dir -r vault/requirements.txt
+RUN useradd -m appuser
+USER appuser
 
-# Still runs as root (students should fix with USER)
-EXPOSE 5000 7000
-
-CMD ["python","web/app.py"]
+CMD ["python", "web/app.py"]
